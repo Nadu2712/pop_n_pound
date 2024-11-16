@@ -11,6 +11,42 @@ let plantClickCount = 0;
 let lives = 3;
 let gameStarted = false;
 
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2)
+    return decodeURIComponent(parts.pop().split(";").shift());
+}
+
+const username = getCookie("username");
+if (username) {
+  console.log(`Welcome back, ${username}!`);
+} else {
+  console.log("No user found. Redirecting to login...");
+  window.location.href = "../pages/login.html";
+}
+
+function deleteCookie(name) {
+  // Deleting the cookie by setting an expiration date in the past
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+}
+
+function logout() {
+  console.log("Logout triggered");  // Debugging
+  deleteCookie("username");  // Delete the username cookie
+  window.location.href = "../pages/login.html";  // Redirect to login page
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Make sure the logout button exists before adding event listener
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout);
+  } else {
+    console.error("Logout button not found in DOM");
+  }
+});
+
 window.onload = function () {
   initializeGame();
   showStartPopup();
@@ -36,6 +72,10 @@ function startGame() {
   plantIntervalID = setInterval(setPlant, plantInterval);
 
   setInterval(updateGameTime, 1000);
+  const username = getCookie("username");
+  if (!username) {
+    window.location.href = "../pages/login.html";
+  }
 }
 
 function resetGame() {
@@ -140,6 +180,11 @@ function playAgain() {
   showStartPopup();
   resetIntervals();
   gameStarted = false;
+
+  const username = getCookie("username");
+  if (!username) {
+    window.location.href = "../pages/login.html"; // Redirect to login if not logged in
+  }
 }
 
 function resetIntervals() {
@@ -181,11 +226,11 @@ document.getElementById("toggle-rules-btn").addEventListener("click", () => {
 function clearMoleAndPlant() {
   if (currMoleTile) {
     currMoleTile.innerHTML = ""; // Remove mole image
-    currMoleTile = null;         // Reset reference
+    currMoleTile = null; // Reset reference
   }
   if (currPlantTile) {
     currPlantTile.innerHTML = ""; // Remove plant image
-    currPlantTile = null;         // Reset reference
+    currPlantTile = null; // Reset reference
   }
 }
 

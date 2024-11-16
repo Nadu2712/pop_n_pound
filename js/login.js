@@ -29,6 +29,7 @@ document.getElementById("login-form").addEventListener("submit", async (event) =
         const message = await response.text();
 
         if (response.ok) {
+            setCookie("username", username, 7);
             showToast(message, "success"); // Login successful
             // Redirect to the game page or dashboard
             setTimeout(() => {
@@ -42,6 +43,13 @@ document.getElementById("login-form").addEventListener("submit", async (event) =
         showToast("An error occurred. Please try again.", "error");
     }
 });
+
+function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // Expiry time in milliseconds
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${encodeURIComponent(value)};${expires};path=/;SameSite=Strict`;
+}
 
 function showToast(message, type = "success") {
     const toastContainer = document.getElementById("toast-container");
