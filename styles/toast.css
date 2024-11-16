@@ -17,11 +17,11 @@
 }
 
 .toast.error {
-    background-color: #d9534f;
+    background-color: #ff0800;
 }
 
 .toast.success {
-    background-color: #5cb85c;
+    background-color: #00d000;
 }
 
 @keyframes slide-down {
