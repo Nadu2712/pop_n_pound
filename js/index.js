@@ -10,6 +10,11 @@ let moleIntervalID, plantIntervalID;
 let plantClickCount = 0;
 let lives = 3;
 let gameStarted = false;
+let remainingAttempts = 3;
+let solution = null;
+let questionImage = null;
+let gameContinued = false;
+let retry = 0;
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -27,18 +32,16 @@ if (username) {
 }
 
 function deleteCookie(name) {
-  // Deleting the cookie by setting an expiration date in the past
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
 
 function logout() {
-  console.log("Logout triggered");  // Debugging
-  deleteCookie("username");  // Delete the username cookie
-  window.location.href = "../pages/login.html";  // Redirect to login page
+  console.log("Logout triggered");
+  deleteCookie("username");
+  window.location.href = "../pages/login.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Make sure the logout button exists before adding event listener
   const logoutBtn = document.getElementById("logout-btn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", logout);
@@ -79,19 +82,42 @@ function startGame() {
 }
 
 function resetGame() {
+  gameStarted = false;
+  gameContinued = false;
+  resetIntervals();
   score = 0;
   plantClickCount = 0;
   lives = 3;
-  updateLivesDisplay();
   gameTime = 0;
   currMoleTile = null;
   currPlantTile = null;
   gameOver = false;
-  gameStarted = false;
+  remainingAttempts = 3;
   updateScore();
+  updateLivesDisplay();
   hideGameOverPopup();
+  hideContinuePopup();
   showStartPopup();
   clearMoleAndPlant();
+}
+
+function resetIntervals() {
+  clearInterval(moleIntervalID);
+  clearInterval(plantIntervalID);
+}
+
+
+function resetGame2() {
+  plantClickCount = 0;
+  lives = 3;
+  updateLivesDisplay();
+  gameOver = false;
+  gameStarted = true;
+  updateScore();
+  hideGameOverPopup();
+  hideContinuePopup();
+  remainingAttempts = 0;
+  gameContinued = true;
 }
 
 function getRandomTile() {
@@ -167,7 +193,7 @@ function endGame() {
   gameOver = true;
   resetIntervals();
 
-  document.getElementById("score").innerText = `GAME OVER: ${score}`;
+  document.getElementById("score").innerText = `Score: ${score}`;
   addToLeaderboard(score);
 
   clearMoleAndPlant();
@@ -183,24 +209,21 @@ function playAgain() {
 
   const username = getCookie("username");
   if (!username) {
-    window.location.href = "../pages/login.html"; // Redirect to login if not logged in
+    window.location.href = "../pages/login.html";
   }
 }
 
 function resetIntervals() {
-  // Clear the intervals for mole and plant
   clearInterval(moleIntervalID);
   clearInterval(plantIntervalID);
 }
 
-// Add the score to the leaderboard
 function addToLeaderboard(score) {
   leaderboard.push(score);
-  leaderboard.sort((a, b) => b - a); // Sort in descending order
-  leaderboard = leaderboard.slice(0, 5); // Keep top 5 scores
+  leaderboard.sort((a, b) => b - a);
+  leaderboard = leaderboard.slice(0, 5);
 }
 
-// Show the leaderboard popup
 function showLeaderboard() {
   const leaderboardList = document.getElementById("leaderboard-list");
   leaderboardList.innerHTML = leaderboard
@@ -209,7 +232,6 @@ function showLeaderboard() {
   document.getElementById("leaderboard-popup").classList.remove("hidden");
 }
 
-// Toggle game rules
 document.getElementById("toggle-rules-btn").addEventListener("click", () => {
   const rules = document.getElementById("game-rules");
   const toggleButton = document.getElementById("toggle-rules-btn");
@@ -225,73 +247,149 @@ document.getElementById("toggle-rules-btn").addEventListener("click", () => {
 
 function clearMoleAndPlant() {
   if (currMoleTile) {
-    currMoleTile.innerHTML = ""; // Remove mole image
-    currMoleTile = null; // Reset reference
+    currMoleTile.innerHTML = "";
+    currMoleTile = null;
   }
   if (currPlantTile) {
-    currPlantTile.innerHTML = ""; // Remove plant image
-    currPlantTile = null; // Reset reference
+    currPlantTile.innerHTML = "";
+    currPlantTile = null;
   }
 }
 
-// Close the leaderboard popup
 function closeLeaderboard() {
   document.getElementById("leaderboard-popup").classList.add("hidden");
 }
 
-// Show the game-over popup
 function showGameOverPopup() {
   document.getElementById("game-over-popup").classList.remove("hidden");
+  document.getElementById("final-score").innerText = `${score}`;
+  if (retry >= 1) {
+    document.getElementById("cont").classList.add("hidden");
+  }
 }
 
-// Hide the game-over popup
 function hideGameOverPopup() {
   document.getElementById("game-over-popup").classList.add("hidden");
 }
 
+function hideContinuePopup() {
+  document.getElementById("continue-popup").classList.add("hidden");
+}
+
 document.getElementById("play-again-btn").addEventListener("click", playAgain);
 
-// Show the start game popup
 function showStartPopup() {
   document.getElementById("start-popup").classList.remove("hidden");
 }
 
-// Hide the start game popup
 function hideStartPopup() {
-  // Add a small timeout to ensure any DOM manipulation is done
   setTimeout(() => {
     document.getElementById("start-popup").classList.add("hidden");
-  }, 0); // 0 delay, but ensures the call happens after other events
+  }, 0);
 }
 
-// Toggle game rules
-document.getElementById("toggle-rules-btn").addEventListener("click", () => {
-  const rules = document.getElementById("game-rules");
-  const toggleButton = document.getElementById("toggle-rules-btn");
-
-  if (rules.classList.contains("hidden")) {
-    rules.classList.remove("hidden");
-    toggleButton.textContent = "Hide Rules";
-  } else {
-    rules.classList.add("hidden");
-    toggleButton.textContent = "Show Rules";
-  }
-});
-
 function updateGameTime() {
+  if (!gameStarted || gameContinued) return;
+
   gameTime++;
 
-  // Increase speed every 30 seconds
   if (gameTime % 60 === 0) {
     moleInterval -= 100;
     plantInterval -= 100;
 
-    // Clear existing intervals
     clearInterval(moleIntervalID);
     clearInterval(plantIntervalID);
 
-    // Start new intervals with faster speeds
     moleIntervalID = setInterval(setMole, moleInterval);
     plantIntervalID = setInterval(setPlant, plantInterval);
   }
+}
+
+async function fetchQuestionData() {
+  try {
+    const response = await fetch("http://localhost:3000/game/question");
+    const questionData = await response.json();
+    questionImage = questionData.question;
+    solution = questionData.solution;
+    console.log("Question:", questionImage);
+    console.log("Solution:", solution);
+  } catch (error) {
+    console.error("Error fetching question data:", error);
+  }
+}
+
+async function continueGame() {
+  if (gameContinued || gameStarted) return;
+
+  gameContinued = true;  // Indicate that the game has moved to the continuation phase
+  gameStarted = false;   // Ensure that game doesn't restart automatically
+
+  if (!questionImage || !solution) {
+    await fetchQuestionData();
+  }
+
+  const continuepopup = document.getElementById("continue-popup");
+
+  if (!questionImage || !solution) {
+    console.error("Question image or solution is still not available.");
+    return;
+  }
+
+  const continueButton = document.createElement("button");
+  continueButton.textContent = "Submit Answer";
+  continueButton.addEventListener("click", handleAnswerSubmission);
+
+  console.log("--------", questionImage, solution);
+
+  continuepopup.innerHTML = `
+    <h2>Game Over! Answer this question:</h2>
+    <img src="${questionImage}" alt="Question" />
+    <input type="number" id="user-answer" placeholder="Enter your answer" />
+    <div id="attempts-left">Attempts left: ${remainingAttempts}</div>
+  `;
+  continuepopup.appendChild(continueButton);
+  continuepopup.classList.remove("hidden");
+  startIntervals();
+}
+
+function startIntervals() {
+  moleIntervalID = setInterval(setMole, moleInterval);
+  plantIntervalID = setInterval(setPlant, plantInterval);
+
+  setInterval(updateGameTime, 1000);
+}
+
+
+function handleAnswerSubmission() {
+  const userAnswer = document.getElementById("user-answer").value;
+  const attemptsLeft = document.getElementById("attempts-left");
+
+  if (parseInt(userAnswer) === solution) {
+    showToast("Correct answer! You may continue the game.", "success");
+    retry++;
+    resetGame2();
+    gameContinued = false;
+  } else {
+    remainingAttempts--;
+
+    if (remainingAttempts <= 0) {
+      showToast("Incorrect answer! Game Over.", "error");
+      resetGame();
+    } else {
+      attemptsLeft.textContent = `Attempts left: ${remainingAttempts}`;
+    }
+  }
+}
+
+function showToast(message, type = "success") {
+  const toastContainer = document.getElementById("toast-container");
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  toastContainer.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
 }
