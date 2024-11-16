@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
+const axios = require("axios");
 
 const app = express();
 app.use(bodyParser.json());
@@ -67,6 +68,18 @@ app.post("/signup", async (req, res) => {
         });
     } catch (err) {
         res.status(500).send("Server error.");
+    }
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////////////// Fetch question data from external API
+app.get("/game/question", async (req, res) => {
+    try {
+        const response = await axios.get("http://marcconrad.com/uob/banana/api.php?out=json");
+        const questionData = response.data;
+        res.status(200).json(questionData);
+    } catch (error) {
+        console.error("Error fetching question data:", error);
+        res.status(500).send("Failed to fetch question data.");
     }
 });
 
