@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POP'N POUND</title>
+    <link rel="stylesheet" href="../styles/index.css" />
+    <script src="../js/index.js" defer></script>
+  </head>
+  <body>
+    <h1>POP'N POUND</h1>
+
+    <!-- Controls (Scoreboard and Leaderboard button) -->
+    <div class="controls">
+      <h2 id="score">Score: 0</h2>
+      <div id="lives">
+        <img
+          id="life1"
+          src="../images/heart.png"
+          alt="Life 1"
+          class="life-icon"
+        />
+        <img
+          id="life2"
+          src="../images/heart.png"
+          alt="Life 2"
+          class="life-icon"
+        />
+        <img
+          id="life3"
+          src="../images/heart.png"
+          alt="Life 3"
+          class="life-icon"
+        />
+      </div>
+      <button id="leaderboard-btn" type="button" onclick="showLeaderboard()">
+        Leaderboard
+      </button>
+    </div>
+
+    <!-- Start Game Popup -->
+    <div id="start-popup" class="popup">
+      <h2>Welcome to POP'N POUND!</h2>
+      <button id="toggle-rules-btn">Show Rules</button>
+      <button type="button" onclick="startGame()">Start Game</button>
+
+      <!-- Game Rules -->
+      <div id="game-rules" class="hidden">
+        <h3>Game Rules</h3>
+        <ul>
+          <li>Rule 01</li>
+          <li>Rule 01</li>
+          <li>Rule 01</li>
+          <li>Rule 01</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Leaderboard Popup -->
+    <div id="leaderboard-popup" class="popup hidden">
+      <h2>Leaderboard</h2>
+      <ol id="leaderboard-list"></ol>
+      <button type="button" onclick="closeLeaderboard()">Close</button>
+    </div>
+
+    <div id="game-over-popup" class="popup hidden">
+      <h2>Game Over</h2>
+      <p>Your Score: <span id="final-score"></span></p>
+      <div class="button-group">
+        <button type="button" onclick="playAgain()">Play Again</button>
+        <button type="button" onclick="continueGame()">Continue</button>
+      </div>
+    </div>    
+
+    <!-- 3x3 Game Board -->
+    <div id="board"></div>
+  </body>
+</html>
