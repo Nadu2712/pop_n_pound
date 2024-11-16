@@ -1,0 +1,193 @@
+/* General page styling */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  background: url("../images/Banana_pattern.png");
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+}
+
+/* Title */
+h1 {
+  margin: 1px 0;
+  font-size: 3rem;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Controls: Scoreboard and Leaderboard Button */
+.controls {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 10px auto;
+  padding: 0; /* Removed padding */
+}
+
+#score {
+  font-size: 1.5rem;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 1px 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#leaderboard-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007004;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#leaderboard-btn:hover {
+  background-color: #333b00;
+}
+
+/* Game Board */
+#board {
+  width: 960px; /* Adjusted width to fit 4 columns */
+  height: 540px; /* Keep the same height */
+  margin: 10px auto; /* Adjusted margin */
+  display: grid; /* Use grid layout */
+  grid-template-columns: repeat(4, 1fr); /* Create 4 columns */
+  grid-template-rows: repeat(3, 1fr); /* Create 3 rows */
+  background: url("../images/Background2.png");
+  background-size: cover;
+  border: 3px solid white;
+  border-radius: 25px;
+}
+
+/* Individual Grid Cells (Tiles) */
+#board div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Fill the available width */
+  height: 100%; /* Fill the available height */
+  background-color: transparent; /* Set transparent background */
+}
+
+/* Style for the mole image */
+.mole {
+  width: 80px;
+  height: 100px;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+/* Style for the plant image */
+.plant {
+  width: 200px;
+  height: 170px;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+
+/* Popup Styling */
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px; /* Reduced padding */
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  width: 250px; /* Slightly smaller width */
+  z-index: 10;
+  animation: popup-appear 0.5s ease-in-out;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes popup-appear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Game Rules Section */
+#game-rules {
+  margin-top: 10px;
+  text-align: left;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 5px; /* Reduced padding */
+  border-radius: 8px;
+}
+
+#game-rules.hidden {
+  display: none;
+}
+
+/* Buttons */
+button {
+  padding: 8px 12px; /* Reduced padding */
+  margin: 5px 3px; /* Slightly reduced margin */
+  background-color: #007804;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Leaderboard List */
+#leaderboard-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  color: #fff;
+  text-align: left;
+}
+
+#leaderboard-list li {
+  margin: 5px 0;
+  font-size: 1.1rem;
+}
+
+#lives {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.life-icon {
+  width: 50px;
+  height: 50;
+  margin: 0 5px;
+}
+ 
