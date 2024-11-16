@@ -5,30 +5,29 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: #f9f9f9;
     font-family: Arial, Helvetica, sans-serif;
-    text-align: center;
     background: url("../images/Banana_pattern.png");
     background-size: cover;
+    color: white; /* Make all text in the body white */
 }
 
-/* Login form container */
-.login-container {
-    background-color: #595f019d;
-    background: url("../images/Background2.png");
+/* Signup form container */
+.signup-container {
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background for contrast */
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 400px;
+    background: url("../images/Background2.png");
     text-align: center;
 }
 
 /* Form elements */
 h1 {
     margin-bottom: 20px;
-    font-size: 1.8em;
-    color: #ffffff; /* Text color set to white */
+    color: white; /* White text for heading */
 }
 
 form {
@@ -38,47 +37,23 @@ form {
 
 label {
     text-align: left;
-    font-size: 1.1em;
-    color: #ffffff; /* Text color set to white */
     margin-top: 10px;
+    color: white; /* White text for labels */
 }
 
 input[type="text"],
+input[type="email"],
 input[type="password"] {
     padding: 10px;
     margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #3d3b00;
-    border-radius: 5px;
-    font-size: 1em;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: black; /* Black text inside input for readability */
 }
 
-/* Link to signup page */
-p {
-    margin-top: 15px;
-    font-size: 0.9em;
-    color: #ffffff; /* Text color set to white */
-}
-
-.para1 {
-    font-size: medium;
-    font-weight: 500;
-    color: #ffffff;
-}
-
-a {
-    font-size: medium;
-    font-weight: 800;
-    color: #ffffff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Stylish login button */
-.btn-login {
+.btn-signup {
     padding: 12px 20px;
     font-size: 1em;
     font-weight: bold;
@@ -91,13 +66,30 @@ a:hover {
     transition: all 0.3s ease; /* Smooth transition for effects */
 }
 
-.btn-login:hover {
+.btn-signup:hover {
     background: linear-gradient(135deg, #575a01, #dbdb00); /* Change gradient on hover */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
     transform: translateY(-2px); /* Slight upward motion */
 }
 
-.btn-login:active {
+.btn-signup:active {
     transform: translateY(2px); /* Slight downward motion when clicked */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Reduce shadow on click */
+}
+
+/* Link to login page */
+p {
+    margin-top: 15px;
+    color: white; /* White text for paragraph */
+}
+
+a {
+    font-size: medium;
+    font-weight: 800;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
