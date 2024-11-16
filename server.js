@@ -21,31 +21,6 @@ db.connect(err => {
     console.log("Connected to MySQL database.");
 });
 
-/////////////////////////////////////////////////////////////////////////////////////////////////// Signup API
-app.post("/signup", async (req, res) => {
-    const { username, email, password } = req.body;
-
-    if (!username || !email || !password) {
-        return res.status(400).send("All fields are required.");
-    }
-
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-        db.query(sql, [username, email, hashedPassword], (err, result) => {
-            if (err) {
-                if (err.code === "ER_DUP_ENTRY") {
-                    return res.status(400).send("Username or email already exists.");
-                }
-                return res.status(500).send("Server error.");
-            }
-            res.status(201).send("User registered successfully.");
-        });
-    } catch (err) {
-        res.status(500).send("Server error.");
-    }
-});
-
 /////////////////////////////////////////////////////////////////////////////////////////////////// Login API
 app.post("/login", (req, res) => {
     const { username, password } = req.body;
