@@ -12,6 +12,18 @@ body {
     color: white; /* Make all text in the body white */
 }
 
+.geo-data {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
 /* Signup form container */
 .signup-container {
     background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background for contrast */
