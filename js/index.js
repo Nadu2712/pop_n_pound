@@ -2,7 +2,6 @@ let currMoleTile;
 let currPlantTile;
 let score = 0;
 let gameOver = false;
-let leaderboard = [];
 let gameTime = 0;
 let moleInterval = 1000;
 let plantInterval = 2000;
@@ -189,25 +188,42 @@ function updateLivesDisplay() {
   }
 }
 
+function saveScore(username, score) {
+  fetch('http://localhost:3000/save-score', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ username, score })
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.message);
+    })
+    .catch((error) => {
+      console.error('Error saving score:', error);
+    });
+}
+
 function endGame() {
   gameOver = true;
   resetIntervals();
 
-  document.getElementById("score").innerText = `Score: ${score}`;
-  addToLeaderboard(score);
+  document.getElementById("score").innerText = `GAME OVER: ${score}`;
 
   clearMoleAndPlant();
   showGameOverPopup();
 }
 
 function playAgain() {
+  const username = getCookie("username");
+  saveScore(username, score);
   resetGame();
   document.getElementById("game-over-popup").classList.add("hidden");
   showStartPopup();
   resetIntervals();
   gameStarted = false;
 
-  const username = getCookie("username");
   if (!username) {
     window.location.href = "../pages/login.html";
   }
@@ -216,20 +232,6 @@ function playAgain() {
 function resetIntervals() {
   clearInterval(moleIntervalID);
   clearInterval(plantIntervalID);
-}
-
-function addToLeaderboard(score) {
-  leaderboard.push(score);
-  leaderboard.sort((a, b) => b - a);
-  leaderboard = leaderboard.slice(0, 5);
-}
-
-function showLeaderboard() {
-  const leaderboardList = document.getElementById("leaderboard-list");
-  leaderboardList.innerHTML = leaderboard
-    .map((entry, index) => `<li>${index + 1}. ${entry}</li>`)
-    .join("");
-  document.getElementById("leaderboard-popup").classList.remove("hidden");
 }
 
 document.getElementById("toggle-rules-btn").addEventListener("click", () => {
@@ -254,10 +256,6 @@ function clearMoleAndPlant() {
     currPlantTile.innerHTML = "";
     currPlantTile = null;
   }
-}
-
-function closeLeaderboard() {
-  document.getElementById("leaderboard-popup").classList.add("hidden");
 }
 
 function showGameOverPopup() {
@@ -321,8 +319,8 @@ async function fetchQuestionData() {
 async function continueGame() {
   if (gameContinued || gameStarted) return;
 
-  gameContinued = true;  // Indicate that the game has moved to the continuation phase
-  gameStarted = false;   // Ensure that game doesn't restart automatically
+  gameContinued = true;  
+  gameStarted = false; 
 
   if (!questionImage || !solution) {
     await fetchQuestionData();
@@ -373,6 +371,8 @@ function handleAnswerSubmission() {
     remainingAttempts--;
 
     if (remainingAttempts <= 0) {
+      const username = getCookie("username");
+      saveScore(username, score);
       showToast("Incorrect answer! Game Over.", "error");
       resetGame();
     } else {
