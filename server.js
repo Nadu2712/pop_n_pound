@@ -83,6 +83,37 @@ app.get("/game/question", async (req, res) => {
     }
 });
 
+/////////////////////////////////////////////////////////////////////////////////////////////////// Endpoint to save score
+app.post('/save-score', (req, res) => {
+    const { username, score } = req.body;
+  
+    if (!username || score == null) {
+      return res.status(400).json({ message: 'Username and score are required' });
+    }
+  
+    const query = 'INSERT INTO game_scores (username, score) VALUES (?, ?)';
+    db.query(query, [username, score], (err, result) => {
+      if (err) {
+        console.error('Error saving score:', err);
+        return res.status(500).json({ message: 'Error saving score' });
+      }
+      res.status(200).json({ message: 'Score saved successfully' });
+    });
+  });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////// Leaderboard
+
+  app.get('/leaderboard', (req, res) => {
+    const query = 'SELECT username, score FROM game_scores ORDER BY score DESC LIMIT 10';
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error('Error fetching leaderboard:', err);
+        return res.status(500).json({ message: 'Error fetching leaderboard' });
+      }
+      res.status(200).json(results);
+    });
+  });
+
 /////////////////////////////////////////////////////////////////////////////////////////////////// Start Server
 app.listen(3000, () => {
     console.log("Server running on http://localhost:3000");
