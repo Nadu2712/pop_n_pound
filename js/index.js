@@ -234,18 +234,26 @@ function resetIntervals() {
   clearInterval(plantIntervalID);
 }
 
-document.getElementById("toggle-rules-btn").addEventListener("click", () => {
-  const rules = document.getElementById("game-rules");
+document.addEventListener("DOMContentLoaded", () => {
   const toggleButton = document.getElementById("toggle-rules-btn");
+  const rules = document.getElementById("game-rules");
 
-  if (rules.classList.contains("hidden")) {
-    rules.classList.remove("hidden");
-    toggleButton.textContent = "Hide Rules";
+  // Ensure elements exist before adding event listeners
+  if (toggleButton && rules) {
+    toggleButton.addEventListener("click", () => {
+      if (rules.classList.contains("hidden")) {
+        rules.classList.remove("hidden");
+        toggleButton.textContent = "Hide Rules";
+      } else {
+        rules.classList.add("hidden");
+        toggleButton.textContent = "Show Rules";
+      }
+    });
   } else {
-    rules.classList.add("hidden");
-    toggleButton.textContent = "Show Rules";
+    console.error("Toggle button or game rules element is missing!");
   }
 });
+
 
 function clearMoleAndPlant() {
   if (currMoleTile) {
